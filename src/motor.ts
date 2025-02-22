@@ -1,3 +1,5 @@
+import { EstadoPartida } from "./modelo";
+
 export const obtenerImagen = (carta: number): string => {
 	switch (carta) {
 		case 1:
@@ -65,5 +67,17 @@ export const obtenerMensajeMePlanto = (puntuacionTotal: number): string => {
 		return "Puntos: " + puntuacionTotal + ". " + "Has sido muy conservador";
 	} else {
 		return "Puntos: " + puntuacionTotal;
+	}
+};
+
+export const checkearSiPuedeSeguirJugando = (
+	puntuacionTotal: number
+): EstadoPartida => {
+	if (puntuacionTotal > 7.5) {
+		return "JUEGO_TERMINADO_PUNTUACION_SUPERIOR";
+	} else if (puntuacionTotal === 7.5) {
+		return "JUEGO_TERMINADO_PUNTUACION_EXACTA";
+	} else {
+		return "PUEDE_SEGUIR_JUGANDO";
 	}
 };

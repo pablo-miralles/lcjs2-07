@@ -5,6 +5,7 @@ import {
 	obtenerCartaAleatoria,
 	obtenerValorCartaAleatoria,
 	obtenerMensajeMePlanto,
+	checkearSiPuedeSeguirJugando,
 } from "./motor";
 
 const elementoImagen = document.querySelector(".cards__item-img");
@@ -49,26 +50,37 @@ const habilitarBotones = (esVerdadero: boolean): void => {
 	}
 };
 
-const checkearSiPuedeSeguirJugando = (puntuacionTotal: number): void => {
-	if (puntuacionTotal > 7.5) {
+const actualizarEstadoBotones = (puntuacionTotal: number): void => {
+	const estado = checkearSiPuedeSeguirJugando(puntuacionTotal);
+
+	if (estado === "JUEGO_TERMINADO_PUNTUACION_SUPERIOR") {
+		habilitarBotones(false);
+	} else if (estado === "JUEGO_TERMINADO_PUNTUACION_EXACTA") {
+		habilitarBotones(false);
+	} else {
+		habilitarBotones(true);
+	}
+};
+
+const actualizarTextoMensaje = (puntuacionTotal: number): void => {
+	const estado = checkearSiPuedeSeguirJugando(puntuacionTotal);
+
+	if (estado === "JUEGO_TERMINADO_PUNTUACION_SUPERIOR") {
 		imprimirMensajePuntuacion(
 			"Puntos: " +
 				puntuacionTotal +
 				". " +
 				"¡Has perdido! Te has pasado de 7.5 puntos."
 		);
-		habilitarBotones(false);
-	} else if (puntuacionTotal === 7.5) {
+	} else if (estado === "JUEGO_TERMINADO_PUNTUACION_EXACTA") {
 		imprimirMensajePuntuacion(
 			"Puntos: " +
 				puntuacionTotal +
 				". " +
 				"¡Lo has clavado! ¡Enhorabuena!"
 		);
-		habilitarBotones(false);
 	} else {
 		imprimirMensajePuntuacion("Puntos: " + puntuacionTotal);
-		habilitarBotones(true);
 	}
 };
 
@@ -78,7 +90,8 @@ export const ejecutarAccionesBotonDameCarta = (): void => {
 	const urlImg = obtenerImagen(cartaAletoria);
 	imprimirImagen(urlImg);
 	partida.puntuacionTotal += valorCarta;
-	checkearSiPuedeSeguirJugando(partida.puntuacionTotal);
+	actualizarEstadoBotones(partida.puntuacionTotal);
+	actualizarTextoMensaje(partida.puntuacionTotal);
 };
 
 export const ejecutarAccionesBotonMePlanto = (): void => {
